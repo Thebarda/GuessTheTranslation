@@ -79,6 +79,7 @@ const Listing = (): JSX.Element => {
 
       return;
     }
+    resetForm();
     setShowAddDialog(false);
   };
 
