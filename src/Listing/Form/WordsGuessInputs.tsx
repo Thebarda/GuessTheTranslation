@@ -2,13 +2,12 @@
 import * as React from 'react';
 
 import { useAtom } from 'jotai';
-import { ThemeContext } from '@emotion/react';
 
 import { FormHelperText, IconButton, TextField, Theme } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { makeStyles } from '@mui/styles';
 
-import { wordsToGuessAtom } from '../../atoms';
+import { wordsToGuessAtom, wordsToGuessWasFocusedAtom } from '../../atoms';
 
 const useStyles = makeStyles<Theme>((theme) => ({
   translationContainer: {
@@ -30,8 +29,10 @@ interface ChangeWordsToGuessProps {
 
 const WordsToGuessInputs = (): JSX.Element => {
   const classes = useStyles();
-  const [wasFocus, setWasFocus] = React.useState(false);
 
+  const [wordsToGuessWasFocused, setWordsToGuessWasFocused] = useAtom(
+    wordsToGuessWasFocusedAtom,
+  );
   const [wordsToGuess, setWordsToGuess] = useAtom(wordsToGuessAtom);
 
   const changeWordsToGuess =
@@ -58,10 +59,10 @@ const WordsToGuessInputs = (): JSX.Element => {
     setWordsToGuess(newWordsToGuess.filter((_, i) => i !== index));
   };
 
-  const blur = (): void => setWasFocus(true);
+  const blur = (): void => setWordsToGuessWasFocused(true);
 
   const hasError =
-    wasFocus &&
+    wordsToGuessWasFocused &&
     (wordsToGuess.length === 0 || wordsToGuess.some((word) => !word));
 
   return (

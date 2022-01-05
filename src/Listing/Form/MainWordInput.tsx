@@ -4,19 +4,21 @@ import { useAtom } from 'jotai';
 
 import { FormHelperText, TextField } from '@mui/material';
 
-import { mainWordAtom } from '../../atoms';
+import { mainWordAtom, mainWordWasFocusedAtom } from '../../atoms';
 
 const MainWordInput = (): JSX.Element => {
-  const [wasFocus, setWasFocus] = React.useState(false);
+  const [mainWordWasFocused, setMainWordWasFocused] = useAtom(
+    mainWordWasFocusedAtom,
+  );
   const [mainWord, setMainWord] = useAtom(mainWordAtom);
 
   const changeMainWord = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setMainWord(event.target.value);
   };
 
-  const blur = (): void => setWasFocus(true);
+  const blur = (): void => setMainWordWasFocused(true);
 
-  const hasError = wasFocus && !mainWord;
+  const hasError = mainWordWasFocused && !mainWord;
 
   return (
     <div>

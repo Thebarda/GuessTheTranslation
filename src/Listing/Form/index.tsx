@@ -5,6 +5,7 @@ import { makeStyles } from '@mui/styles';
 
 import MainWordInput from './MainWordInput';
 import WordsToGuessInputs from './WordsGuessInputs';
+import AddAnotherTranslation from './AddAnotherTranslation';
 
 const useStyles = makeStyles<Theme>((theme) => ({
   form: {
@@ -22,6 +23,7 @@ const Form = (): JSX.Element => {
       <MainWordInput />
       <Divider />
       <WordsToGuessInputs />
+      <AddAnotherTranslation />
     </div>
   );
 };

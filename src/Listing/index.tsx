@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { useAtomValue, useResetAtom } from 'jotai/utils';
+import { RESET, useAtomValue, useResetAtom } from 'jotai/utils';
 import { FixedSizeList } from 'react-window';
 import { useAtom } from 'jotai';
 
@@ -8,7 +8,13 @@ import { Box, Button, Dialog, DialogTitle, Fab, Theme } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import makeStyles from '@mui/styles/makeStyles';
 
-import { mainWordAtom, translationsAtom, wordsToGuessAtom } from '../atoms';
+import {
+  addAnotherTranslationAtom,
+  mainWordAtom,
+  resetFormDerivedAtom,
+  translationsAtom,
+  wordsToGuessAtom,
+} from '../atoms';
 
 import Row from './Row';
 import Form from './Form';
@@ -44,18 +50,20 @@ const Listing = (): JSX.Element => {
 
   const [showAddDialog, setShowAddDialog] = React.useState(false);
 
+  const [addAnotherTranslation, setAddAnotherTranslation] = useAtom(
+    addAnotherTranslationAtom,
+  );
   const [translations, setTranslations] = useAtom(translationsAtom);
   const wordsToGuess = useAtomValue(wordsToGuessAtom);
   const mainWord = useAtomValue(mainWordAtom);
-  const resetMainWord = useResetAtom(mainWordAtom);
-  const resetWordsToGuess = useResetAtom(wordsToGuessAtom);
+  const resetForm = useResetAtom(resetFormDerivedAtom);
 
   const openDialog = (): void => setShowAddDialog(true);
 
   const closeDialog = (): void => {
+    resetForm();
     setShowAddDialog(false);
-    resetMainWord();
-    resetWordsToGuess();
+    setAddAnotherTranslation(RESET);
   };
 
   const submit = (): void => {
@@ -66,8 +74,12 @@ const Listing = (): JSX.Element => {
         fr: wordsToGuess,
       },
     ]);
-    resetMainWord();
-    resetWordsToGuess();
+    if (addAnotherTranslation) {
+      resetForm();
+
+      return;
+    }
+    setShowAddDialog(false);
   };
 
   const totalTranslations = translations.length;
