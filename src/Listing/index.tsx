@@ -3,6 +3,7 @@ import * as React from 'react';
 import { RESET, useAtomValue, useResetAtom } from 'jotai/utils';
 import { FixedSizeList } from 'react-window';
 import { useAtom } from 'jotai';
+import { useSnackbar } from 'notistack';
 
 import { Box, Button, Dialog, DialogTitle, Fab, Theme } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
@@ -58,6 +59,8 @@ const Listing = (): JSX.Element => {
   const mainWord = useAtomValue(mainWordAtom);
   const resetForm = useResetAtom(resetFormDerivedAtom);
 
+  const { enqueueSnackbar } = useSnackbar();
+
   const openDialog = (): void => setShowAddDialog(true);
 
   const closeDialog = (): void => {
@@ -74,6 +77,9 @@ const Listing = (): JSX.Element => {
         fr: wordsToGuess,
       },
     ]);
+
+    enqueueSnackbar('Translation added', { variant: 'success' });
+
     if (addAnotherTranslation) {
       resetForm();
 
