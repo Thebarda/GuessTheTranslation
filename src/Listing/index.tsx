@@ -29,6 +29,7 @@ const useStyles = makeStyles<Theme>((theme) => ({
     display: 'grid',
     gridTemplateRows: 'auto min-content',
     margin: '0 auto',
+    rowGap: theme.spacing(2),
     width: theme.spacing(70),
   },
 }));
@@ -49,7 +50,7 @@ const Listing = (): JSX.Element => {
   } = useTranslations();
 
   return (
-    <>
+    <div>
       <Box className={classes.listingContainer}>
         <FixedSizeList
           height={
@@ -97,7 +98,7 @@ const Listing = (): JSX.Element => {
           </Button>
         </div>
       </Dialog>
-    </>
+    </div>
   );
 };
 

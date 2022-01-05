@@ -62,7 +62,7 @@ const Row = ({ index }: Props): JSX.Element | null => {
         secondary={translation.fr.join(', ')}
       />
       <Dialog open={askingBeforeDelete} onBackdropClick={closeDialog}>
-        <DialogTitle>Delete the translation ?</DialogTitle>
+        <DialogTitle>Delete the translation?</DialogTitle>
         <DialogActions>
           <Button onClick={closeDialog}>Cancel</Button>
           <Button variant="contained" onClick={deleteTranslation}>
