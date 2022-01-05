@@ -60,7 +60,7 @@ const useTranslations = (): UseTranslationsState => {
     }
     resetForm();
     setShowAddDialog(false);
-  }, [translations, addAnotherTranslation]);
+  }, [translations, addAnotherTranslation, mainWord, wordsToGuess]);
 
   const totalTranslations = translations.length;
 
