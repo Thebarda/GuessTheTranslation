@@ -64,9 +64,16 @@ const TranslationGame = (): JSX.Element => {
 
   const canStartTheStreak = !!streakLength;
 
+  const canStartGame = translations.length > 0;
+
   return (
     <>
-      <Button fullWidth variant="contained" onClick={openDialog}>
+      <Button
+        fullWidth
+        disabled={!canStartGame}
+        variant="contained"
+        onClick={openDialog}
+      >
         Start the game
       </Button>
       <Dialog
