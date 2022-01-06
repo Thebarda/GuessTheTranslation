@@ -106,6 +106,9 @@ const TranslationGame = (): JSX.Element => {
               >
                 Start the streak
               </Button>
+              <Button fullWidth onClick={closeDialog}>
+                Exit
+              </Button>
             </>
           )}
         </DialogContent>
