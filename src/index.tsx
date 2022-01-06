@@ -24,7 +24,7 @@ const Main = (): JSX.Element => {
             horizontal: 'center',
             vertical: 'bottom',
           }}
-          maxSnack={3}
+          maxSnack={1}
         >
           <Provider>
             <Box
