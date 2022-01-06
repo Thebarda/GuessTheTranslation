@@ -33,8 +33,8 @@ const useStyles = makeStyles<Theme>((theme) => ({
   },
 }));
 
-const itemSize = 72;
-const maxElementsToShow = 10;
+export const itemSize = 72;
+export const maxElementsToShow = 10;
 
 const Listing = (): JSX.Element => {
   const classes = useStyles();

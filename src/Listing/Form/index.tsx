@@ -3,9 +3,13 @@ import * as React from 'react';
 import { Divider, Theme } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 
-import MainWordInput from './MainWordInput';
-import WordsToGuessInputs from './WordsGuessInputs';
-import AddAnotherTranslation from './AddAnotherTranslation';
+import LoadingSkeleton from '../../LoadingSkeleton';
+
+const MainWordInput = React.lazy(() => import('./MainWordInput'));
+const WordsToGuessInputs = React.lazy(() => import('./WordsGuessInputs'));
+const AddAnotherTranslation = React.lazy(
+  () => import('./AddAnotherTranslation'),
+);
 
 const useStyles = makeStyles<Theme>((theme) => ({
   form: {
@@ -20,10 +24,16 @@ const Form = (): JSX.Element => {
 
   return (
     <div className={classes.form}>
-      <MainWordInput />
+      <React.Suspense fallback={<LoadingSkeleton height={56} width="100%" />}>
+        <MainWordInput />
+      </React.Suspense>
       <Divider />
-      <WordsToGuessInputs />
-      <AddAnotherTranslation />
+      <React.Suspense fallback={<LoadingSkeleton height={56} width="100%" />}>
+        <WordsToGuessInputs />
+      </React.Suspense>
+      <React.Suspense fallback={<LoadingSkeleton height={42} width="100%" />}>
+        <AddAnotherTranslation />
+      </React.Suspense>
     </div>
   );
 };
