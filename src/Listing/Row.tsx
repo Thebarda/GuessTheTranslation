@@ -1,7 +1,6 @@
 import * as React from 'react';
 
 import { useUpdateAtom } from 'jotai/utils';
-import { useAtom } from 'jotai';
 
 import {
   Button,
@@ -16,19 +15,21 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 
 import { startEditingTranslationDerivedAtom, translationsAtom } from '../atoms';
+import { Translation } from '../models';
 
 interface Props {
+  data: Array<Translation>;
   index: number;
 }
 
-const Row = ({ index }: Props): JSX.Element | null => {
+const Row = ({ index, data }: Props): JSX.Element | null => {
   const [askingBeforeDelete, setAskingBeforeDelete] = React.useState(false);
-  const [translations, setTranslations] = useAtom(translationsAtom);
+  const setTranslations = useUpdateAtom(translationsAtom);
   const startEditingTranslation = useUpdateAtom(
     startEditingTranslationDerivedAtom,
   );
 
-  const translation = translations[index];
+  const translation = data[index];
 
   const askBeforeDelete = (): void => setAskingBeforeDelete(true);
 
@@ -39,15 +40,11 @@ const Row = ({ index }: Props): JSX.Element | null => {
   };
 
   const deleteTranslation = (): void => {
-    setTranslations((currentTranslations) =>
-      currentTranslations.filter((_, i) => i !== index),
+    setTranslations((translations) =>
+      translations.filter((_, i) => i !== index),
     );
     closeDialog();
   };
-
-  if (!translation) {
-    return null;
-  }
 
   return (
     <ListItem

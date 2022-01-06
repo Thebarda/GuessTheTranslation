@@ -6,6 +6,8 @@ import { Box, Button, Dialog, DialogTitle, Fab, Theme } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import makeStyles from '@mui/styles/makeStyles';
 
+import { Translation } from '../models';
+
 import Row from './Row';
 import Form from './Form';
 import useTranslations from './useTranslations';
@@ -47,18 +49,21 @@ const Listing = (): JSX.Element => {
     canSubmit,
     submit,
     isEditing,
+    translations,
   } = useTranslations();
 
   return (
     <>
       <Box className={classes.listingContainer}>
-        <FixedSizeList
+        <FixedSizeList<Array<Translation>>
           height={
-            totalTranslations < 10
+            (totalTranslations < 10
               ? totalTranslations * itemSize
-              : maxElementsToShow * itemSize
+              : maxElementsToShow * itemSize) + 1
           }
           itemCount={totalTranslations}
+          itemData={translations}
+          itemKey={(index, data): string => `${index}-${data[index].en}`}
           itemSize={72}
           overscanCount={5}
           width="100%"

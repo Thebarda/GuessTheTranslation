@@ -12,6 +12,7 @@ import {
   translationsAtom,
   wordsToGuessAtom,
 } from '../atoms';
+import { Translation } from '../models';
 
 interface UseTranslationsState {
   canSubmit: boolean;
@@ -21,6 +22,7 @@ interface UseTranslationsState {
   showAddDialog: boolean;
   submit: () => void;
   totalTranslations: number;
+  translations: Array<Translation>;
 }
 
 const useTranslations = (): UseTranslationsState => {
@@ -119,6 +121,7 @@ const useTranslations = (): UseTranslationsState => {
     showAddDialog,
     submit,
     totalTranslations,
+    translations,
   };
 };
 
