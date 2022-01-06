@@ -1,6 +1,7 @@
 import * as React from 'react';
 
-import { useAtomValue, useUpdateAtom } from 'jotai/utils';
+import { useUpdateAtom } from 'jotai/utils';
+import { useAtom } from 'jotai';
 
 import {
   Button,
@@ -12,8 +13,9 @@ import {
   ListItemText,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 
-import { getTranslationDerivedAtom, translationsAtom } from '../atoms';
+import { startEditingTranslationDerivedAtom, translationsAtom } from '../atoms';
 
 interface Props {
   index: number;
@@ -21,18 +23,24 @@ interface Props {
 
 const Row = ({ index }: Props): JSX.Element | null => {
   const [askingBeforeDelete, setAskingBeforeDelete] = React.useState(false);
-  const getTranslation = useAtomValue(getTranslationDerivedAtom);
-  const setTranslations = useUpdateAtom(translationsAtom);
+  const [translations, setTranslations] = useAtom(translationsAtom);
+  const startEditingTranslation = useUpdateAtom(
+    startEditingTranslationDerivedAtom,
+  );
 
-  const translation = getTranslation(index);
+  const translation = translations[index];
 
   const askBeforeDelete = (): void => setAskingBeforeDelete(true);
 
   const closeDialog = (): void => setAskingBeforeDelete(false);
 
+  const editTranslation = (): void => {
+    startEditingTranslation({ index, translation });
+  };
+
   const deleteTranslation = (): void => {
-    setTranslations((translations) =>
-      translations.filter((_, i) => i !== index),
+    setTranslations((currentTranslations) =>
+      currentTranslations.filter((_, i) => i !== index),
     );
     closeDialog();
   };
@@ -46,14 +54,24 @@ const Row = ({ index }: Props): JSX.Element | null => {
       disableGutters
       disablePadding
       secondaryAction={
-        <IconButton
-          aria-label="delete"
-          color="primary"
-          size="small"
-          onClick={askBeforeDelete}
-        >
-          <DeleteIcon />
-        </IconButton>
+        <>
+          <IconButton
+            aria-label="edit"
+            color="primary"
+            size="small"
+            onClick={editTranslation}
+          >
+            <EditIcon />
+          </IconButton>
+          <IconButton
+            aria-label="delete"
+            color="primary"
+            size="small"
+            onClick={askBeforeDelete}
+          >
+            <DeleteIcon />
+          </IconButton>
+        </>
       }
       sx={{ height: 72 }}
     >

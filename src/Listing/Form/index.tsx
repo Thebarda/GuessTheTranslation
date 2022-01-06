@@ -19,7 +19,11 @@ const useStyles = makeStyles<Theme>((theme) => ({
   },
 }));
 
-const Form = (): JSX.Element => {
+interface Props {
+  isEditing: boolean;
+}
+
+const Form = ({ isEditing }: Props): JSX.Element => {
   const classes = useStyles();
 
   return (
@@ -31,9 +35,11 @@ const Form = (): JSX.Element => {
       <React.Suspense fallback={<LoadingSkeleton height={56} width="100%" />}>
         <WordsToGuessInputs />
       </React.Suspense>
-      <React.Suspense fallback={<LoadingSkeleton height={42} width="100%" />}>
-        <AddAnotherTranslation />
-      </React.Suspense>
+      {!isEditing && (
+        <React.Suspense fallback={<LoadingSkeleton height={42} width="100%" />}>
+          <AddAnotherTranslation />
+        </React.Suspense>
+      )}
     </div>
   );
 };

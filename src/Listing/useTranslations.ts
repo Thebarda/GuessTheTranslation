@@ -6,6 +6,7 @@ import { useSnackbar } from 'notistack';
 
 import {
   addAnotherTranslationAtom,
+  editingTranslationAtom,
   mainWordAtom,
   resetFormDerivedAtom,
   translationsAtom,
@@ -15,6 +16,7 @@ import {
 interface UseTranslationsState {
   canSubmit: boolean;
   closeDialog: () => void;
+  isEditing: boolean;
   openDialog: () => void;
   showAddDialog: boolean;
   submit: () => void;
@@ -30,19 +32,37 @@ const useTranslations = (): UseTranslationsState => {
   const [translations, setTranslations] = useAtom(translationsAtom);
   const wordsToGuess = useAtomValue(wordsToGuessAtom);
   const mainWord = useAtomValue(mainWordAtom);
+  const editingTranslation = useAtomValue(editingTranslationAtom);
   const resetForm = useResetAtom(resetFormDerivedAtom);
+  const resetEditingTranslation = useResetAtom(editingTranslationAtom);
 
   const { enqueueSnackbar } = useSnackbar();
 
   const openDialog = React.useCallback((): void => setShowAddDialog(true), []);
 
   const closeDialog = React.useCallback((): void => {
-    resetForm();
     setShowAddDialog(false);
-    setAddAnotherTranslation(RESET);
   }, []);
 
   const submit = React.useCallback((): void => {
+    if (editingTranslation !== null) {
+      setTranslations(
+        translations.map((translation, index) => {
+          if (index === editingTranslation) {
+            return {
+              en: mainWord,
+              fr: wordsToGuess,
+            };
+          }
+
+          return translation;
+        }),
+      );
+      enqueueSnackbar('Translation edited', { variant: 'success' });
+      setShowAddDialog(false);
+
+      return;
+    }
     setTranslations([
       ...translations,
       {
@@ -58,9 +78,31 @@ const useTranslations = (): UseTranslationsState => {
 
       return;
     }
-    resetForm();
+
     setShowAddDialog(false);
   }, [translations, addAnotherTranslation, mainWord, wordsToGuess]);
+
+  React.useEffect(() => {
+    if (editingTranslation === null) {
+      return;
+    }
+
+    setShowAddDialog(true);
+  }, [editingTranslation]);
+
+  React.useEffect(() => {
+    if (showAddDialog) {
+      return;
+    }
+
+    resetForm();
+    setShowAddDialog(false);
+    setAddAnotherTranslation(RESET);
+    if (editingTranslation === null) {
+      return;
+    }
+    resetEditingTranslation();
+  }, [showAddDialog]);
 
   const totalTranslations = translations.length;
 
@@ -72,6 +114,7 @@ const useTranslations = (): UseTranslationsState => {
   return {
     canSubmit,
     closeDialog,
+    isEditing: editingTranslation !== null,
     openDialog,
     showAddDialog,
     submit,

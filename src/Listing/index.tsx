@@ -46,6 +46,7 @@ const Listing = (): JSX.Element => {
     showAddDialog,
     canSubmit,
     submit,
+    isEditing,
   } = useTranslations();
 
   return (
@@ -73,30 +74,32 @@ const Listing = (): JSX.Element => {
           <AddIcon />
         </Fab>
       </Box>
-      <Dialog
-        classes={{
-          paper: classes.dialog,
-        }}
-        open={showAddDialog}
-        onBackdropClick={closeDialog}
-        onClose={closeDialog}
-      >
-        <DialogTitle>Add a translation</DialogTitle>
-        <Form />
-        <div className={classes.actionButtons}>
-          <Button color="primary" onClick={closeDialog}>
-            Cancel
-          </Button>
-          <Button
-            color="primary"
-            disabled={!canSubmit}
-            variant="contained"
-            onClick={submit}
-          >
-            Confirm
-          </Button>
-        </div>
-      </Dialog>
+      {showAddDialog && (
+        <Dialog
+          open
+          classes={{
+            paper: classes.dialog,
+          }}
+          onBackdropClick={closeDialog}
+          onClose={closeDialog}
+        >
+          <DialogTitle>{isEditing ? 'Edit' : 'Add'} a translation</DialogTitle>
+          <Form isEditing={isEditing} />
+          <div className={classes.actionButtons}>
+            <Button color="primary" onClick={closeDialog}>
+              Cancel
+            </Button>
+            <Button
+              color="primary"
+              disabled={!canSubmit}
+              variant="contained"
+              onClick={submit}
+            >
+              Confirm
+            </Button>
+          </div>
+        </Dialog>
+      )}
     </>
   );
 };

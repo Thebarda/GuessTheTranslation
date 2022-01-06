@@ -8,12 +8,6 @@ export const translationsAtom = atomWithStorage<Array<Translation>>(
   [],
 );
 
-export const getTranslationDerivedAtom = atom(
-  (get) =>
-    (index: number): Translation | undefined =>
-      get(translationsAtom).at(index),
-);
-
 export const mainWordAtom = atomWithReset<string>('');
 export const wordsToGuessAtom = atomWithReset<Array<string>>([]);
 export const mainWordWasFocusedAtom = atomWithReset<boolean>(false);
@@ -30,5 +24,25 @@ export const resetFormDerivedAtom = atom(
     set(wordsToGuessAtom, newValue);
     set(mainWordWasFocusedAtom, newValue);
     set(wordsToGuessWasFocusedAtom, newValue);
+  },
+);
+
+export const editingTranslationAtom = atomWithReset<number | null>(null);
+
+export const startEditingTranslationDerivedAtom = atom(
+  null,
+  (_, set, { translation, index }) => {
+    set(editingTranslationAtom, index);
+    set(mainWordAtom, translation.en);
+    set(wordsToGuessAtom, translation.fr);
+  },
+);
+
+export const confirmEditTranslationDerivedAtom = atom(
+  null,
+  (get, set, newValue: Translation) => {
+    set(translationsAtom, [...get(translationsAtom), newValue]);
+    set(mainWordAtom, RESET);
+    set(wordsToGuessAtom, RESET);
   },
 );
