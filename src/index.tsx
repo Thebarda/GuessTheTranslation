@@ -7,6 +7,7 @@ import { SnackbarProvider } from 'notistack';
 import { Box, StyledEngineProvider } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
+import { register } from './serviceWorkerRegistration';
 import App from './App';
 
 const Main = (): JSX.Element => {
@@ -51,3 +52,5 @@ ReactDOM.render(
   </React.StrictMode>,
   document.getElementById('root'),
 );
+
+register();
