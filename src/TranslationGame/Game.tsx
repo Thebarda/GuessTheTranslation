@@ -1,10 +1,11 @@
 import * as React from 'react';
 
 import { useSnackbar } from 'notistack';
+import { diffChars } from 'diff';
 
 import { Button, TextField, Typography } from '@mui/material';
 
-import { Translation } from '../models';
+import { CompareTranslationResult, Translation } from '../models';
 
 import Progress from './Progress';
 import GameFinished from './GameFinished';
@@ -18,6 +19,38 @@ interface Props {
 
 const pickRandonIndex = (length: number): number =>
   Math.floor(Math.random() * length);
+
+interface CompareWordsProps {
+  answer: string;
+  translation: string;
+}
+
+interface Diff {
+  added: string;
+  count: number;
+  removed: string;
+}
+
+const compareWords = ({
+  answer,
+  translation,
+}: CompareWordsProps): CompareTranslationResult => {
+  if (answer === translation) {
+    return CompareTranslationResult.Equal;
+  }
+
+  const differences = diffChars(answer, translation);
+
+  const numberOfDifferences = differences.reduce(
+    (acc: number, diff: Diff) =>
+      acc + (diff.added || diff.removed ? diff.count : 0),
+    0,
+  );
+
+  return numberOfDifferences > 2
+    ? CompareTranslationResult.Different
+    : CompareTranslationResult.AlmostEqual;
+};
 
 const Game = ({
   streakLength,
@@ -39,16 +72,28 @@ const Game = ({
 
   const resetGuessAnswer = (): void => setGuessAnwser('');
 
-  const checkAnswer = React.useCallback((): boolean => {
+  const checkAnswer = React.useCallback((): CompareTranslationResult => {
     const translation = translationsLeft[selectedTranslationIndex];
 
-    return translation.fr
-      .map((word) => word.toLowerCase())
-      .includes(guessAnswer.toLowerCase());
+    const comparisonResults = translation.fr.map((word) =>
+      compareWords({
+        answer: guessAnswer.toLowerCase(),
+        translation: word.toLowerCase(),
+      }),
+    );
+
+    return comparisonResults.sort()[0];
   }, [guessAnswer, translationsLeft, selectedTranslationIndex]);
 
   const goToNextWord = React.useCallback((): void => {
-    if (!checkAnswer()) {
+    const result = checkAnswer();
+
+    if (result === CompareTranslationResult.AlmostEqual) {
+      enqueueSnackbar('You are almost there', { variant: 'warning' });
+
+      return;
+    }
+    if (result === CompareTranslationResult.Different) {
       enqueueSnackbar('Wrong answer!', { variant: 'error' });
 
       return;
@@ -87,6 +132,8 @@ const Game = ({
     ? null
     : translationsLeft[selectedTranslationIndex];
 
+  const nextLabel = currentStep === streakLength ? 'End streak' : 'Next word';
+
   return isGameFinished ? (
     <GameFinished endGame={endGame} newGame={newGame} />
   ) : (
@@ -109,7 +156,7 @@ const Game = ({
         variant="contained"
         onClick={goToNextWord}
       >
-        Next word
+        {nextLabel}
       </Button>
     </>
   );
