@@ -24,8 +24,8 @@ const HelpContent = (): JSX.Element => (
     </Typography>
     <br />
     <Typography variant="body2">
-      Firstly, add some words to your dictionary by clicking on the
-      &ldquo;+&ldquo; button.
+      Firstly, add some words (basically a main word and translations) to your
+      dictionary by clicking on the &ldquo;+&ldquo; button.
     </Typography>
     <Typography variant="body2">
       Then, click on the &ldquo;Start the game&ldquo; button to configure the
