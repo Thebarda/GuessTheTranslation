@@ -4,6 +4,7 @@ import { useAtomValue } from 'jotai/utils';
 
 import {
   Button,
+  Container,
   Dialog,
   DialogContent,
   DialogTitle,
@@ -18,19 +19,11 @@ import Game from './Game';
 
 const useStyles = makeStyles<Theme>((theme) => ({
   dialogContent: {
+    alignItems: 'center',
     display: 'flex',
     flexDirection: 'column',
     justifyItems: 'center',
-    margin: '0 auto',
     rowGap: theme.spacing(2),
-    width: theme.spacing(70),
-  },
-  gameContent: {
-    margin: '0 auto',
-    width: theme.spacing(70),
-  },
-  streakInput: {
-    margin: '0 auto',
   },
 }));
 
@@ -46,8 +39,8 @@ const TranslationGame = (): JSX.Element => {
   const openDialog = (): void => setShowGameDialog(true);
 
   const closeDialog = (): void => {
-    setGameHasStarted(false);
     setShowGameDialog(false);
+    setGameHasStarted(false);
   };
 
   const changeStreakLength = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -76,50 +69,50 @@ const TranslationGame = (): JSX.Element => {
       >
         Start the game
       </Button>
-      <Dialog
-        fullScreen
-        open={showGameDialog}
-        onBackdropClick={closeDialog}
-        onClose={closeDialog}
-      >
-        <DialogTitle sx={{ textAlign: 'center' }}>
-          Guess the translation!
-        </DialogTitle>
-        <DialogContent
-          className={classes.dialogContent}
-          style={{ paddingTop: '16px' }}
+      {showGameDialog && (
+        <Dialog
+          fullScreen
+          open
+          onBackdropClick={closeDialog}
+          onClose={closeDialog}
         >
-          {gameHasStarted ? (
-            <Game
-              endGame={closeDialog}
-              newGame={newGame}
-              streakLength={streakLength}
-              translations={translations}
-            />
-          ) : (
-            <>
-              <TextField
-                className={classes.streakInput}
-                label="Streak length"
-                type="number"
-                value={streakLength || ''}
-                onChange={changeStreakLength}
-              />
-              <Button
-                fullWidth
-                disabled={!canStartTheStreak}
-                variant="contained"
-                onClick={startStreak}
-              >
-                Start the streak
-              </Button>
-              <Button fullWidth onClick={closeDialog}>
-                Exit
-              </Button>
-            </>
-          )}
-        </DialogContent>
-      </Dialog>
+          <DialogTitle sx={{ textAlign: 'center' }}>
+            Guess the translation!
+          </DialogTitle>
+          <DialogContent style={{ paddingTop: '16px' }}>
+            <Container className={classes.dialogContent} maxWidth="sm">
+              {gameHasStarted ? (
+                <Game
+                  endGame={closeDialog}
+                  newGame={newGame}
+                  streakLength={streakLength}
+                  translations={translations}
+                />
+              ) : (
+                <>
+                  <TextField
+                    label="Streak length"
+                    type="number"
+                    value={streakLength || ''}
+                    onChange={changeStreakLength}
+                  />
+                  <Button
+                    fullWidth
+                    disabled={!canStartTheStreak}
+                    variant="contained"
+                    onClick={startStreak}
+                  >
+                    Start the streak
+                  </Button>
+                  <Button fullWidth onClick={closeDialog}>
+                    Exit
+                  </Button>
+                </>
+              )}
+            </Container>
+          </DialogContent>
+        </Dialog>
+      )}
     </>
   );
 };

@@ -37,9 +37,19 @@ const HelpContent = (): JSX.Element => (
 const Help: React.FunctionComponent = () => {
   const classes = useStyles();
 
+  const [open, setOpen] = React.useState(false);
+
+  const toggleTooltip = (): void => setOpen((currentOpen) => !currentOpen);
+
   return (
-    <Tooltip placement="top-start" title={<HelpContent />}>
-      <Fab aria-label="help" className={classes.fab}>
+    <Tooltip open={open} placement="top-start" title={<HelpContent />}>
+      <Fab
+        aria-label="help"
+        className={classes.fab}
+        onMouseEnter={toggleTooltip}
+        onMouseLeave={toggleTooltip}
+        onTouchStart={toggleTooltip}
+      >
         <QuestionMarkIcon />
       </Fab>
     </Tooltip>
