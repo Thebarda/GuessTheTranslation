@@ -5,6 +5,7 @@ import { makeStyles } from '@mui/styles';
 
 import LoadingSkeleton from './LoadingSkeleton';
 import ListingSkeleton from './Listing/ListingSkeleton';
+import Help from './Help';
 
 const TranslationGame = React.lazy(() => import('./TranslationGame'));
 const Listing = React.lazy(() => import('./Listing'));
@@ -37,6 +38,7 @@ const App = (): JSX.Element => {
           <Listing />
         </React.Suspense>
       </div>
+      <Help />
     </div>
   );
 };
