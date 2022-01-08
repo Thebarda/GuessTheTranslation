@@ -39,7 +39,7 @@ const Help: React.FunctionComponent = () => {
 
   return (
     <Tooltip placement="top-start" title={<HelpContent />}>
-      <Fab className={classes.fab}>
+      <Fab aria-label="help" className={classes.fab}>
         <QuestionMarkIcon />
       </Fab>
     </Tooltip>
