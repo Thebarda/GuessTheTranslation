@@ -5,7 +5,7 @@ import { makeStyles } from '@mui/styles';
 
 import LoadingSkeleton from './LoadingSkeleton';
 import ListingSkeleton from './Listing/ListingSkeleton';
-import Help from './Help';
+import Help from './Footer';
 
 const TranslationGame = React.lazy(() => import('./TranslationGame'));
 const Listing = React.lazy(() => import('./Listing'));
