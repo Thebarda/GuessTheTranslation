@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import { useAtomValue } from 'jotai/utils';
+import { isNil, not } from 'ramda';
 
 import {
   Button,
@@ -13,7 +14,8 @@ import {
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 
-import { translationsAtom } from '../atoms';
+import { profileDataDerivedAtom } from '../atoms';
+import { Profile } from '../models';
 
 import Game from './Game';
 
@@ -34,7 +36,7 @@ const TranslationGame = (): JSX.Element => {
   const [streakLength, setStreakLength] = React.useState(1);
   const [gameHasStarted, setGameHasStarted] = React.useState(false);
 
-  const translations = useAtomValue(translationsAtom);
+  const profile = useAtomValue(profileDataDerivedAtom);
 
   const openDialog = (): void => setShowGameDialog(true);
 
@@ -52,12 +54,12 @@ const TranslationGame = (): JSX.Element => {
   const newGame = (): void => setGameHasStarted(false);
 
   React.useEffect(() => {
-    setStreakLength(translations.length);
-  }, [translations]);
+    setStreakLength(profile?.translations.length || 0);
+  }, [profile]);
 
   const canStartTheStreak = !!streakLength;
 
-  const canStartGame = translations.length > 0;
+  const canStartGame = (profile?.translations.length || 0) > 0;
 
   return (
     <>
@@ -69,7 +71,7 @@ const TranslationGame = (): JSX.Element => {
       >
         Start the game
       </Button>
-      {showGameDialog && (
+      {showGameDialog && not(isNil(profile)) && (
         <Dialog
           fullScreen
           open
@@ -86,7 +88,7 @@ const TranslationGame = (): JSX.Element => {
                   endGame={closeDialog}
                   newGame={newGame}
                   streakLength={streakLength}
-                  translations={translations}
+                  translations={(profile as Profile).translations}
                 />
               ) : (
                 <>

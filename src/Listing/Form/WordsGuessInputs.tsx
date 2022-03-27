@@ -2,12 +2,18 @@
 import * as React from 'react';
 
 import { useAtom } from 'jotai';
+import { useAtomValue } from 'jotai/utils';
 
 import { FormHelperText, IconButton, TextField, Theme } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { makeStyles } from '@mui/styles';
 
-import { wordsToGuessAtom, wordsToGuessWasFocusedAtom } from '../../atoms';
+import {
+  profileDataDerivedAtom,
+  wordsToGuessAtom,
+  wordsToGuessWasFocusedAtom,
+} from '../../atoms';
+import { getLocaleName } from '../../Profiles/locales';
 
 const useStyles = makeStyles<Theme>((theme) => ({
   translationContainer: {
@@ -34,6 +40,7 @@ const WordsToGuessInputs = (): JSX.Element => {
     wordsToGuessWasFocusedAtom,
   );
   const [wordsToGuess, setWordsToGuess] = useAtom(wordsToGuessAtom);
+  const profile = useAtomValue(profileDataDerivedAtom);
 
   const changeWordsToGuess =
     ({ index, isNewWord }: ChangeWordsToGuessProps) =>
@@ -76,7 +83,9 @@ const WordsToGuessInputs = (): JSX.Element => {
               inputProps={{
                 'aria-label': `word_${index}`,
               }}
-              label="Translation"
+              label={`Translation in ${getLocaleName(
+                profile?.language.to || '',
+              )}`}
               value={word || ''}
               onBlur={blur}
               onChange={changeWordsToGuess({ index, isNewWord })}

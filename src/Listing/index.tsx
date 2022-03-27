@@ -81,10 +81,12 @@ const Listing = (): JSX.Element => {
       </Box>
       {showAddDialog && (
         <Dialog
+          fullWidth
           open
           classes={{
             paper: classes.dialog,
           }}
+          maxWidth="xs"
           onBackdropClick={closeDialog}
           onClose={closeDialog}
         >

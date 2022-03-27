@@ -1,11 +1,17 @@
 import { atomWithReset, atomWithStorage, RESET } from 'jotai/utils';
 import { atom } from 'jotai';
+import { isNil } from 'ramda';
 
-import { Translation } from './models';
+import { Profile, Profiles, Translation } from './models';
 
-export const translationsAtom = atomWithStorage<Array<Translation>>(
-  'GuessTheTranslation:translations',
-  [],
+export const profilesAtom = atomWithStorage<Profiles>(
+  'GuessTheTranslation:profiles',
+  {},
+);
+
+export const profileUsedAtom = atomWithStorage<string | null>(
+  'GuessTheTranslation:profileUsed',
+  null,
 );
 
 export const mainWordAtom = atomWithReset<string>('');
@@ -41,8 +47,44 @@ export const startEditingTranslationDerivedAtom = atom(
 export const confirmEditTranslationDerivedAtom = atom(
   null,
   (get, set, newValue: Translation) => {
-    set(translationsAtom, [...get(translationsAtom), newValue]);
+    const profileUsed = get(profileUsedAtom);
+    const profile = profileUsed ? get(profilesAtom)[profileUsed] : null;
+
+    if (isNil(profile)) {
+      return;
+    }
+
+    set(profilesAtom, {
+      ...get(profilesAtom),
+      [profileUsed as string]: {
+        ...profile,
+        translations: [...profile.translations, newValue],
+      },
+    });
     set(mainWordAtom, RESET);
     set(wordsToGuessAtom, RESET);
   },
 );
+
+export const profileDataDerivedAtom = atom(
+  (get) => {
+    const profileUsed = get(profileUsedAtom);
+
+    return profileUsed ? get(profilesAtom)[profileUsed] : null;
+  },
+  (get, set, newProfile: Profile) => {
+    const profileUsed = get(profileUsedAtom);
+    const profile = profileUsed ? get(profilesAtom)[profileUsed] : null;
+
+    if (isNil(profile)) {
+      return;
+    }
+
+    set(profilesAtom, {
+      ...get(profilesAtom),
+      [profileUsed as string]: newProfile,
+    });
+  },
+);
+
+export const profileDialogOpenedAtom = atom<boolean>(false);

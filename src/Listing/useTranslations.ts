@@ -3,14 +3,15 @@ import * as React from 'react';
 import { RESET, useAtomValue, useResetAtom } from 'jotai/utils';
 import { useAtom } from 'jotai';
 import { useSnackbar } from 'notistack';
+import { equals, isNil } from 'ramda';
 
 import {
   addAnotherTranslationAtom,
   editingTranslationAtom,
   mainWordAtom,
   resetFormDerivedAtom,
-  translationsAtom,
   wordsToGuessAtom,
+  profileDataDerivedAtom,
 } from '../atoms';
 import { Translation } from '../models';
 
@@ -31,7 +32,7 @@ const useTranslations = (): UseTranslationsState => {
   const [addAnotherTranslation, setAddAnotherTranslation] = useAtom(
     addAnotherTranslationAtom,
   );
-  const [translations, setTranslations] = useAtom(translationsAtom);
+  const [profile, setProfile] = useAtom(profileDataDerivedAtom);
   const wordsToGuess = useAtomValue(wordsToGuessAtom);
   const mainWord = useAtomValue(mainWordAtom);
   const editingTranslation = useAtomValue(editingTranslationAtom);
@@ -47,10 +48,15 @@ const useTranslations = (): UseTranslationsState => {
   }, []);
 
   const submit = React.useCallback((): void => {
+    if (isNil(profile)) {
+      return;
+    }
+
     if (editingTranslation !== null) {
-      setTranslations(
-        translations.map((translation, index) => {
-          if (index === editingTranslation) {
+      setProfile({
+        ...profile,
+        translations: profile.translations.map((translation, index) => {
+          if (equals(index, editingTranslation)) {
             return {
               en: mainWord,
               fr: wordsToGuess,
@@ -59,19 +65,22 @@ const useTranslations = (): UseTranslationsState => {
 
           return translation;
         }),
-      );
+      });
       enqueueSnackbar('Translation edited', { variant: 'success' });
       setShowAddDialog(false);
 
       return;
     }
-    setTranslations([
-      ...translations,
-      {
-        en: mainWord,
-        fr: wordsToGuess,
-      },
-    ]);
+    setProfile({
+      ...profile,
+      translations: [
+        ...profile.translations,
+        {
+          en: mainWord,
+          fr: wordsToGuess,
+        },
+      ],
+    });
 
     enqueueSnackbar('Translation added', { variant: 'success' });
 
@@ -82,7 +91,7 @@ const useTranslations = (): UseTranslationsState => {
     }
 
     setShowAddDialog(false);
-  }, [translations, addAnotherTranslation, mainWord, wordsToGuess]);
+  }, [profile, addAnotherTranslation, mainWord, wordsToGuess]);
 
   React.useEffect(() => {
     if (editingTranslation === null) {
@@ -106,7 +115,7 @@ const useTranslations = (): UseTranslationsState => {
     resetEditingTranslation();
   }, [showAddDialog]);
 
-  const totalTranslations = translations.length;
+  const totalTranslations = profile?.translations.length || 0;
 
   const canSubmit =
     mainWord !== '' &&
@@ -121,7 +130,7 @@ const useTranslations = (): UseTranslationsState => {
     showAddDialog,
     submit,
     totalTranslations,
-    translations,
+    translations: profile?.translations || [],
   };
 };
 

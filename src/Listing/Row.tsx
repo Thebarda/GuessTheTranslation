@@ -1,6 +1,8 @@
 import * as React from 'react';
 
 import { useUpdateAtom } from 'jotai/utils';
+import { isNil } from 'ramda';
+import { useAtom } from 'jotai';
 
 import {
   Button,
@@ -14,7 +16,10 @@ import {
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 
-import { startEditingTranslationDerivedAtom, translationsAtom } from '../atoms';
+import {
+  profileDataDerivedAtom,
+  startEditingTranslationDerivedAtom,
+} from '../atoms';
 import { Translation } from '../models';
 
 interface Props {
@@ -24,7 +29,8 @@ interface Props {
 
 const Row = ({ index, data }: Props): JSX.Element | null => {
   const [askingBeforeDelete, setAskingBeforeDelete] = React.useState(false);
-  const setTranslations = useUpdateAtom(translationsAtom);
+
+  const [profile, setProfile] = useAtom(profileDataDerivedAtom);
   const startEditingTranslation = useUpdateAtom(
     startEditingTranslationDerivedAtom,
   );
@@ -40,9 +46,14 @@ const Row = ({ index, data }: Props): JSX.Element | null => {
   };
 
   const deleteTranslation = (): void => {
-    setTranslations((translations) =>
-      translations.filter((_, i) => i !== index),
-    );
+    if (isNil(profile)) {
+      return;
+    }
+
+    setProfile({
+      ...profile,
+      translations: profile.translations.filter((_, i) => i !== index),
+    });
     closeDialog();
   };
 

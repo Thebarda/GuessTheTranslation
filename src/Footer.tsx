@@ -29,11 +29,15 @@ const HelpContent = (): JSX.Element => (
     </Typography>
     <br />
     <Typography variant="body2">
-      Firstly, add some words (basically a main word and translations) to your
+      Firstly, add a profile to get started by selecting a language for your
+      main word and a language for your translations.
+    </Typography>
+    <Typography variant="body2">
+      Then, add some words (basically a main word and translations) to your
       dictionary by clicking on the &ldquo;+&ldquo; button.
     </Typography>
     <Typography variant="body2">
-      Then, click on the &ldquo;Start the game&ldquo; button to configure the
+      Finally, click on the &ldquo;Start the game&ldquo; button to configure the
       length of the streak and start the game.
     </Typography>
   </div>
