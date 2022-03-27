@@ -30,13 +30,14 @@ const useStyles = makeStyles<Theme>((theme) => ({
   listingContainer: {
     display: 'grid',
     gridTemplateRows: 'auto min-content',
+    marginTop: theme.spacing(1),
     rowGap: theme.spacing(2),
     width: '100%',
   },
 }));
 
 export const itemSize = 72;
-export const maxElementsToShow = 10;
+export const maxElementsToShow = 7;
 
 const Listing = (): JSX.Element => {
   const classes = useStyles();
@@ -57,7 +58,7 @@ const Listing = (): JSX.Element => {
       <Box className={classes.listingContainer}>
         <FixedSizeList<Array<Translation>>
           height={
-            (totalTranslations < 10
+            (totalTranslations < maxElementsToShow
               ? totalTranslations * itemSize
               : maxElementsToShow * itemSize) + 1
           }
@@ -70,14 +71,14 @@ const Listing = (): JSX.Element => {
         >
           {Row}
         </FixedSizeList>
-        <Fab
-          aria-label="add"
+        <Button
+          fullWidth
           className={classes.fab}
-          color="primary"
+          startIcon={<AddIcon />}
           onClick={openDialog}
         >
-          <AddIcon />
-        </Fab>
+          Add a word
+        </Button>
       </Box>
       {showAddDialog && (
         <Dialog
