@@ -1,5 +1,7 @@
 # Guess the translation
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/6b903703-ad51-434b-af04-8e9b9763ccce/deploy-status)](https://app.netlify.com/sites/flamboyant-booth-5be16c/deploys)
+
 The goal of this game is to guess the translation of a word through a series of word (streak).
 The project intends to improve your grammar skill in another language.
 
