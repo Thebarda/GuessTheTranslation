@@ -65,7 +65,7 @@ const Listing = (): JSX.Element => {
     <>
       <Box className={classes.listingContainer}>
         <FixedSizeList<Array<Translation>>
-          height={Math.floor(windowHeight - 300)}
+          height={Math.floor(windowHeight - 320)}
           itemCount={totalTranslations}
           itemData={translations}
           itemSize={72}

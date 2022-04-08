@@ -28,6 +28,10 @@ import LanguageTooltip from './LanguageTooltip';
 const useStyles = makeStyles<Theme>((theme) => ({
   profiles: {
     margin: theme.spacing(2, 4, 0, 0),
+    [theme.breakpoints.up('lg')]: {
+      position: 'absolute',
+      right: 0,
+    },
   },
 }));
 

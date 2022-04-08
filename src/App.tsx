@@ -24,12 +24,8 @@ const Listing = React.lazy(() => import('./Listing'));
 const useStyles = makeStyles<Theme>((theme) => ({
   header: {
     display: 'grid',
-    gridTemplateColumns: '2fr 1fr',
-    justifyItems: 'flex-end',
-    [theme.breakpoints.down('lg')]: {
-      gridTemplateColumns: '1fr',
-      justifyItems: 'center',
-    },
+    gridTemplateColumns: '1fr',
+    justifyItems: 'center',
   },
   wrapper: {
     display: 'flex',
