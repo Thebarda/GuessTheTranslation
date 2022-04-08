@@ -42,6 +42,8 @@ export const maxElementsToShow = 7;
 const Listing = (): JSX.Element => {
   const classes = useStyles();
 
+  const [windowHeight, setWindowHeight] = React.useState(window.innerHeight);
+
   const {
     totalTranslations,
     openDialog,
@@ -53,18 +55,19 @@ const Listing = (): JSX.Element => {
     translations,
   } = useTranslations();
 
+  React.useEffect(() => {
+    window.addEventListener('resize', () =>
+      setWindowHeight(window.innerHeight),
+    );
+  }, []);
+
   return (
     <>
       <Box className={classes.listingContainer}>
         <FixedSizeList<Array<Translation>>
-          height={
-            (totalTranslations < maxElementsToShow
-              ? totalTranslations * itemSize
-              : maxElementsToShow * itemSize) + 1
-          }
+          height={Math.floor(windowHeight - 300)}
           itemCount={totalTranslations}
           itemData={translations}
-          itemKey={(index, data): string => `${index}-${data[index].en}`}
           itemSize={72}
           overscanCount={5}
           width="100%"

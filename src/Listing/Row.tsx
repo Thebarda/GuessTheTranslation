@@ -25,9 +25,10 @@ import { Translation } from '../models';
 interface Props {
   data: Array<Translation>;
   index: number;
+  style: React.CSSProperties;
 }
 
-const Row = ({ index, data }: Props): JSX.Element | null => {
+const Row = ({ index, data, style }: Props): JSX.Element | null => {
   const [askingBeforeDelete, setAskingBeforeDelete] = React.useState(false);
 
   const [profile, setProfile] = useAtom(profileDataDerivedAtom);
@@ -81,7 +82,7 @@ const Row = ({ index, data }: Props): JSX.Element | null => {
           </IconButton>
         </>
       }
-      sx={{ height: 72 }}
+      sx={style}
     >
       <ListItemText
         primary={translation?.en}
